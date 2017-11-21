@@ -6,7 +6,7 @@
 
     <persistence-unit name="TL_PU" transaction-type="JTA">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <jta-data-source>java:jboss/datasources/Tag_Lines_DS</jta-data-source>
+        <jta-data-source>java:jboss/datasources/TagLinesDS</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <shared-cache-mode>ALL</shared-cache-mode>
         <properties>
