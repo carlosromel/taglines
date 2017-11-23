@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2017 Carlos Romel Pereira da Silva, carlos.romel@gmail.com
  */
-package br.jus.trtsp.sustentacaoregional.taglinesweb;
+package br.eti.romel.lounge.taglines.rest;
 
-import br.jus.trtsp.sustentacaoregional.taglines.RandomTagLineRemote;
-import javax.ejb.EJB;
-import javax.inject.Named;
+import br.eti.romel.lounge.taglines.*;
+import javax.ejb.*;
+import javax.inject.*;
 
 /**
  *
@@ -14,10 +14,11 @@ import javax.inject.Named;
 @Named
 public class TagLineBean {
 
-    @EJB(mappedName = "java:global/taglines-ejb-1.0-SNAPSHOT/RandomTagLine!br.jus.trtsp.sustentacaoregional.taglines.RandomTagLineRemote")
+    @EJB(mappedName = "java:global/taglines-ejb-1.0-SNAPSHOT/RandomTagLine!br.eti.romel.lounge.taglines.RandomTagLineRemote")
     private RandomTagLineRemote tag;
 
     public String getTagLine() {
+
         return tag.getRandomTagLine();
     }
 }

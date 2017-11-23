@@ -1,18 +1,11 @@
 /*
  * Copyleft (c) 2017 Carlos Romel Pereira da Silva, carlos.romel@gmail.com
  */
-package br.jus.trtsp.sustentacaoregional.taglines.model;
+package br.eti.romel.lounge.taglines.model;
 
-import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Transient;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.io.*;
+import javax.persistence.*;
+import lombok.*;
 
 /**
  *

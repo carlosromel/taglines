@@ -18,6 +18,8 @@
         <body>
             <h1><h:outputText value="TagLine do dia"/></h1>
             <hr/>
+            <p>Disponível também via REST: <a href="v1/tagline">/v1/tagline</a></p>
+            <hr/>
             <pre><h:outputText value="#{tagLineBean.tagLine}"/></pre>
         </body>
     </html>

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2017 Carlos Romel Pereira da Silva, carlos.romel@gmail.com
  */
-package br.jus.trtsp.sustentacaoregional.taglines;
+package br.eti.romel.lounge.taglines;
 
 import javax.ejb.Remote;
 

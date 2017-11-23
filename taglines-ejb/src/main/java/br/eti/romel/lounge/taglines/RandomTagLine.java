@@ -1,14 +1,11 @@
 /**
  * Copyright (c) 2017 Carlos Romel Pereira da Silva, carlos.romel@gmail.com
  */
-package br.jus.trtsp.sustentacaoregional.taglines;
+package br.eti.romel.lounge.taglines;
 
-import br.jus.trtsp.sustentacaoregional.taglines.model.TagLine;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import br.eti.romel.lounge.taglines.model.*;
+import javax.ejb.*;
+import javax.persistence.*;
 
 /**
  *
