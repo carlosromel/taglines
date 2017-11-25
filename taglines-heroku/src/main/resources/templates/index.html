@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'index')}">
+
+    <body>
+        <p>Tagline do dia:</p>
+        <pre><p th:text="${tagLine}"/></pre>
+    </body>
+</html>
