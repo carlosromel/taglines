@@ -10,9 +10,10 @@
     This file is an entry point for JavaServer Faces application.
 --%>
 <f:view>
-    <html>
+    <html lang="pt_BR">
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
             <title>Taglines is back!</title>
         </head>
         <body>
