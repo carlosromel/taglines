@@ -1,2 +1,4 @@
-/taglines-ejb/target/
-/taglines-web/target/
+target
+.env
+.idea/
+*.iml

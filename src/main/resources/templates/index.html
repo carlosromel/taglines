@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'index')}">
+
+    <body>
+        <div class="jumbotron">
+            <div class="container">
+                <h1><i>Tagline</i> do dia</h1>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="alert alert-info text-center" role="alert">
+                <p th:text="${tagLine}"/>
+            </div>
+        </div>
+    </body>
+</html>
