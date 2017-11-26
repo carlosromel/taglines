@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.context.annotation.*;
+import org.springframework.http.*;
 import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,30 @@ public class Main {
 
     @RequestMapping("/")
     String index(Map<String, Object> model) {
+        String tag = getTagLine();
+
+        if (!tag.isEmpty()) {
+            model.put("tagLine", tag);
+        } else {
+            model.put("tagLine", "O banco de dados está vazio?");
+        }
+
+        return "index";
+    }
+
+    @RequestMapping(path = "/v1/tagline",
+                    method = RequestMethod.GET,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    Map<String, String> tagline(Map<String, Object> model) {
+        Map<String, String> result = new HashMap();
+        result.put("tagline", getTagLine());
+
+        return result;
+    }
+
+    private String getTagLine() {
+        String tag = "";
         String fairEnoughRandomTag = ""
                                      + "    update tagline t"
                                      + "       set usage_count = x.new_usage_count"
@@ -47,17 +72,12 @@ public class Main {
             ResultSet rs = stmt.executeQuery(fairEnoughRandomTag);
 
             if (rs.next()) {
-                model.put("tagLine", rs.getString("tag"));
-            } else {
-                model.put("tagLine", "O banco de dados está vazio?");
+                tag = rs.getString("tag");
             }
-
-            return "index";
         } catch (SQLException ex) {
-            model.put("message", ex.getMessage());
-
-            return "error";
         }
+
+        return tag;
     }
 
     @Bean
