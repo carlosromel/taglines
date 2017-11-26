@@ -5,23 +5,26 @@
     <body>
         <div class="jumbotron">
             <div class="container">
-                <h1><i>Tagline</i> do dia</h1>
+                <h1><i>Taglines</i></h1>
             </div>
         </div>
 
         <div class="container">
-            <div class="alert alert-info text-center" role="alert">
-                <p th:text="${tagLine}"/>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="alert alert-info text-center" role="alert">
-                <p>Disponível também via REST:</p>
-                <p>Exemplo:</p>
-                <ul>
-                    <li><a href="/v1/tagline">/v1/tagline</a></li>
-                </ul>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-info text-center" role="alert">
+                        <a href="/"><p th:text="${tagLine}"/></a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="alert alert-info" role="alert">
+                        <p><b>Disponível também via REST</b></p>
+                        <p>Exemplo:</p>
+                        <ul>
+                            <li><a href="/v1/tagline">/v1/tagline</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
