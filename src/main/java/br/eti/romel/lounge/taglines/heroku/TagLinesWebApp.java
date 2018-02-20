@@ -1,33 +1,36 @@
 /**
- * Copyright 2017 Carlos Romel Pereira da Silva, carlos.romel@gmail.com
+ * Copyright (C) 2018 Carlos Romel Pereira da Silva, carlos.romel@gmail.com
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package br.eti.romel.lounge.taglines.heroku;
 
-import com.zaxxer.hikari.*;
 import java.sql.*;
 import java.util.*;
-import javax.sql.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
-import org.springframework.context.annotation.*;
 import org.springframework.http.*;
 import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ *
+ * @author Carlos Romel Pereira da Silva, carlos.romel@gmail.com
+ */
 @Controller
 @SpringBootApplication
-public class Main {
-
-    @Value("${spring.datasource.url}")
-    private String dbUrl;
-
-    @Autowired
-    private DataSource dataSource;
-
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(Main.class, args);
-    }
+public class TagLinesWebApp extends TagLines {
 
     @RequestMapping("/")
     String index(Map<String, Object> model) {
@@ -53,7 +56,7 @@ public class Main {
         return result;
     }
 
-    private String getTagLine() {
+    public String getTagLine() {
         String tag = "";
         String fairEnoughRandomTag = ""
                                      + "    update tagline t"
@@ -78,16 +81,5 @@ public class Main {
         }
 
         return tag;
-    }
-
-    @Bean
-    public DataSource dataSource() throws SQLException {
-        if (dbUrl == null || dbUrl.isEmpty()) {
-            return new HikariDataSource();
-        } else {
-            HikariConfig config = new HikariConfig();
-            config.setJdbcUrl(dbUrl);
-            return new HikariDataSource(config);
-        }
     }
 }
