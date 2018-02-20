@@ -19,6 +19,8 @@ package br.eti.romel.lounge.taglines.chatbot;
 
 import br.eti.romel.lounge.taglines.heroku.*;
 import java.util.logging.*;
+import org.springframework.web.client.*;
+import org.springframework.web.util.*;
 import org.telegram.telegrambots.*;
 import org.telegram.telegrambots.api.methods.send.*;
 import org.telegram.telegrambots.api.objects.*;
@@ -30,6 +32,8 @@ import org.telegram.telegrambots.exceptions.*;
  * @author Carlos Romel Pereira da Silva, carlos.romel@gmail.com
  */
 public class TagLinesChatBot extends TelegramLongPollingBot {
+
+    private final String url = "https://taglines.herokuapp.com";
 
     public static void init() {
         ApiContextInitializer.init();
@@ -46,7 +50,7 @@ public class TagLinesChatBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message mensagem = update.getMessage();
         SendMessage resposta = new SendMessage();
-        String resultado = TagLinesWebApp.getLastTagLine();
+        String resultado = getNewTagLine();
 
         resposta.setChatId(mensagem.getChatId());
         resposta.setText(resultado);
@@ -56,6 +60,16 @@ public class TagLinesChatBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             Logger.getAnonymousLogger().log(Level.SEVERE, null, e);
         }
+    }
+
+    private String getNewTagLine() {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
+
+        RestTemplate restTemplate = new RestTemplate();
+//        WalletListDTO response = ;
+        restTemplate.getForObject(builder.toUriString(), Object.class);
+
+        return TagLinesWebApp.getLastTagLine();
     }
 
     @Override
