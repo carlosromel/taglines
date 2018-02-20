@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.*;
 @SpringBootApplication
 public class TagLinesWebApp extends TagLines {
 
+    private static String lastTagLine = "";
+
     @RequestMapping("/")
     String index(Map<String, Object> model) {
         String tag = getTagLine();
@@ -57,7 +59,6 @@ public class TagLinesWebApp extends TagLines {
     }
 
     public String getTagLine() {
-        String tag = "";
         String fairEnoughRandomTag = ""
                                      + "    update tagline t"
                                      + "       set usage_count = x.new_usage_count"
@@ -75,11 +76,16 @@ public class TagLinesWebApp extends TagLines {
             ResultSet rs = stmt.executeQuery(fairEnoughRandomTag);
 
             if (rs.next()) {
-                tag = rs.getString("tag");
+                this.lastTagLine = rs.getString("tag");
             }
         } catch (SQLException ex) {
         }
 
-        return tag;
+        return this.lastTagLine;
+    }
+
+    public static String getLastTagLine() {
+
+        return TagLinesWebApp.lastTagLine;
     }
 }

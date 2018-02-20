@@ -46,7 +46,7 @@ public class TagLinesChatBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message mensagem = update.getMessage();
         SendMessage resposta = new SendMessage();
-        String resultado = new TagLinesWebApp().getTagLine();
+        String resultado = TagLinesWebApp.getLastTagLine();
 
         resposta.setChatId(mensagem.getChatId());
         resposta.setText(resultado);
