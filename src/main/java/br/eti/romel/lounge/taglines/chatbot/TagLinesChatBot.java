@@ -17,10 +17,13 @@
  */
 package br.eti.romel.lounge.taglines.chatbot;
 
-import br.eti.romel.lounge.taglines.heroku.*;
+import com.google.gson.*;
+import com.google.gson.stream.*;
+import java.io.*;
 import java.util.logging.*;
-import org.springframework.web.client.*;
-import org.springframework.web.util.*;
+import org.apache.http.*;
+import org.apache.http.client.methods.*;
+import org.apache.http.impl.client.*;
 import org.telegram.telegrambots.*;
 import org.telegram.telegrambots.api.methods.send.*;
 import org.telegram.telegrambots.api.objects.*;
@@ -33,7 +36,7 @@ import org.telegram.telegrambots.exceptions.*;
  */
 public class TagLinesChatBot extends TelegramLongPollingBot {
 
-    private final String url = "https://taglines.herokuapp.com";
+    private final String url = "https://taglines.herokuapp.com/v1/tagline";
 
     public static void init() {
         ApiContextInitializer.init();
@@ -62,14 +65,26 @@ public class TagLinesChatBot extends TelegramLongPollingBot {
         }
     }
 
-    private String getNewTagLine() {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
+    public String getNewTagLine() {
+        TagLine tag = new TagLine();
 
-        RestTemplate restTemplate = new RestTemplate();
-//        WalletListDTO response = ;
-        restTemplate.getForObject(builder.toUriString(), Object.class);
+        try (CloseableHttpClient httpClient = new DefaultHttpClient()) {
+            HttpGet getRequest = new HttpGet(url);
+            getRequest.addHeader("accept", "application/json");
 
-        return TagLinesWebApp.getLastTagLine();
+            HttpResponse response = httpClient.execute(getRequest);
+            HttpEntity entity = response.getEntity();
+            InputStream content = entity.getContent();
+            InputStreamReader inputStreamReader = new InputStreamReader(content);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            JsonReader jsonReader = new JsonReader(bufferedReader);
+
+            tag = new Gson().fromJson(jsonReader, TagLine.class);
+        } catch (IOException e) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, null, e);
+        }
+
+        return tag.tagLine;
     }
 
     @Override
@@ -83,4 +98,9 @@ public class TagLinesChatBot extends TelegramLongPollingBot {
 
         return System.getenv("TAGLINES_BOT_API");
     }
+}
+
+class TagLine {
+
+    String tagLine = "";
 }

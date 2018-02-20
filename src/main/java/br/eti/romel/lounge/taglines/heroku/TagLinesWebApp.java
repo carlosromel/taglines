@@ -19,6 +19,7 @@ package br.eti.romel.lounge.taglines.heroku;
 
 import java.sql.*;
 import java.util.*;
+import java.util.logging.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.http.*;
 import org.springframework.stereotype.*;
@@ -31,8 +32,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @SpringBootApplication
 public class TagLinesWebApp extends TagLines {
-
-    private static String lastTagLine = "";
 
     @RequestMapping("/")
     String index(Map<String, Object> model) {
@@ -59,6 +58,7 @@ public class TagLinesWebApp extends TagLines {
     }
 
     public String getTagLine() {
+        String tagLine = "";
         String fairEnoughRandomTag = ""
                                      + "    update tagline t"
                                      + "       set usage_count = x.new_usage_count"
@@ -76,16 +76,12 @@ public class TagLinesWebApp extends TagLines {
             ResultSet rs = stmt.executeQuery(fairEnoughRandomTag);
 
             if (rs.next()) {
-                this.lastTagLine = rs.getString("tag");
+                tagLine = rs.getString("tag");
             }
         } catch (SQLException ex) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, null, ex);
         }
 
-        return this.lastTagLine;
-    }
-
-    public static String getLastTagLine() {
-
-        return TagLinesWebApp.lastTagLine;
+        return tagLine;
     }
 }
