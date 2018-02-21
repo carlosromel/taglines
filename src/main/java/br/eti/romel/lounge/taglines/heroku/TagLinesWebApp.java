@@ -17,10 +17,16 @@
  */
 package br.eti.romel.lounge.taglines.heroku;
 
+import br.eti.romel.lounge.taglines.chatbot.*;
+import com.zaxxer.hikari.*;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.*;
+import javax.sql.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
+import org.springframework.context.annotation.*;
 import org.springframework.http.*;
 import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +37,31 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 @SpringBootApplication
-public class TagLinesWebApp extends TagLines {
+public class TagLinesWebApp {
+
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
+
+    @Autowired
+    protected DataSource dataSource;
+
+    public static void main(String[] args) throws Exception {
+        // WebApp, REST API
+        SpringApplication.run(TagLinesWebApp.class, args);
+        // Telegram ChatBot
+        TagLinesChatBot.init();
+    }
+
+    @Bean
+    public DataSource dataSource() throws SQLException {
+        if (dbUrl == null || dbUrl.isEmpty()) {
+            return new HikariDataSource();
+        } else {
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(dbUrl);
+            return new HikariDataSource(config);
+        }
+    }
 
     @RequestMapping("/")
     String index(Map<String, Object> model) {
@@ -46,10 +76,10 @@ public class TagLinesWebApp extends TagLines {
         return "index";
     }
 
+    @ResponseBody
     @RequestMapping(path = "/v1/tagline",
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     Map<String, String> tagline(Map<String, Object> model) {
         Map<String, String> result = new HashMap();
         result.put("tagline", getTagLine());
@@ -57,7 +87,7 @@ public class TagLinesWebApp extends TagLines {
         return result;
     }
 
-    public String getTagLine() {
+    protected String getTagLine() {
         String tagLine = "";
         String fairEnoughRandomTag = ""
                                      + "    update tagline t"
@@ -71,7 +101,7 @@ public class TagLinesWebApp extends TagLines {
                                      + "     where t.tagline_id = x.id"
                                      + " returning t.tag;";
 
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = this.dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(fairEnoughRandomTag);
 

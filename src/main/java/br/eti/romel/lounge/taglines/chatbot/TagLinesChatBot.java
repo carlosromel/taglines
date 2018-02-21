@@ -18,12 +18,9 @@
 package br.eti.romel.lounge.taglines.chatbot;
 
 import com.google.gson.*;
-import com.google.gson.stream.*;
 import java.io.*;
+import java.net.*;
 import java.util.logging.*;
-import org.apache.http.*;
-import org.apache.http.client.methods.*;
-import org.apache.http.impl.client.*;
 import org.telegram.telegrambots.*;
 import org.telegram.telegrambots.api.methods.send.*;
 import org.telegram.telegrambots.api.objects.*;
@@ -36,7 +33,11 @@ import org.telegram.telegrambots.exceptions.*;
  */
 public class TagLinesChatBot extends TelegramLongPollingBot {
 
-    private final String url = "https://taglines.herokuapp.com/v1/tagline";
+    private final String url;
+
+    public TagLinesChatBot() {
+        this.url = "https://taglines.herokuapp.com/v1/tagline";
+    }
 
     public static void init() {
         ApiContextInitializer.init();
@@ -53,38 +54,16 @@ public class TagLinesChatBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Message mensagem = update.getMessage();
         SendMessage resposta = new SendMessage();
-        String resultado = getNewTagLine();
+        String tagLine = getRandomTagLine();
 
         resposta.setChatId(mensagem.getChatId());
-        resposta.setText(resultado);
+        resposta.setText(tagLine);
 
         try {
             execute(resposta);
         } catch (TelegramApiException e) {
             Logger.getAnonymousLogger().log(Level.SEVERE, null, e);
         }
-    }
-
-    public String getNewTagLine() {
-        TagLine tag = new TagLine();
-
-        try (CloseableHttpClient httpClient = new DefaultHttpClient()) {
-            HttpGet getRequest = new HttpGet(url);
-            getRequest.addHeader("accept", "application/json");
-
-            HttpResponse response = httpClient.execute(getRequest);
-            HttpEntity entity = response.getEntity();
-            InputStream content = entity.getContent();
-            InputStreamReader inputStreamReader = new InputStreamReader(content);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            JsonReader jsonReader = new JsonReader(bufferedReader);
-
-            tag = new Gson().fromJson(jsonReader, TagLine.class);
-        } catch (IOException e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, null, e);
-        }
-
-        return tag.tagLine;
     }
 
     @Override
@@ -97,6 +76,46 @@ public class TagLinesChatBot extends TelegramLongPollingBot {
     public String getBotToken() {
 
         return System.getenv("TAGLINES_BOT_API");
+    }
+
+    private String getRandomTagLine() {
+        String content = getContent();
+
+        return getJSON(content).tagLine;
+    }
+
+    private TagLine getJSON(String content) {
+
+        return new Gson().fromJson(content, TagLine.class);
+    }
+
+    private String getContent() {
+        String content = "";
+
+        try {
+            URL website = new URL(this.url);
+            URLConnection connection = website.openConnection();
+
+            try (InputStream is = connection.getInputStream();
+                 InputStreamReader ir = new InputStreamReader(is);
+                 BufferedReader in = new BufferedReader(ir)) {
+
+                StringBuilder response = new StringBuilder();
+                String inputLine;
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+
+                content = response.toString();
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getAnonymousLogger().log(Level.SEVERE, null, ex);
+        }
+
+        return content;
     }
 }
 
