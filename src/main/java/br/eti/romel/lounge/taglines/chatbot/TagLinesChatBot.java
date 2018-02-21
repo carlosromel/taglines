@@ -108,6 +108,7 @@ public class TagLinesChatBot extends TelegramLongPollingBot {
                 }
 
                 content = response.toString();
+                System.out.printf("Conteúdo lido da API: %s%n", content);
             }
         } catch (MalformedURLException ex) {
             Logger.getAnonymousLogger().log(Level.SEVERE, null, ex);
@@ -121,5 +122,18 @@ public class TagLinesChatBot extends TelegramLongPollingBot {
 
 class TagLine {
 
-    String tagLine = "";
+    String tagLine;
+
+    public TagLine() {
+        System.out.println("Construtor da TagLine");
+        this.tagLine = "";
+    }
+
+    public void setTagLine(String tagLine) {
+        this.tagLine = tagLine;
+    }
+
+    public String getTagLine() {
+        return this.tagLine;
+    }
 }
