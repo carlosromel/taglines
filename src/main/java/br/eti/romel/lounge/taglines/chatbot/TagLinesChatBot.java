@@ -80,8 +80,9 @@ public class TagLinesChatBot extends TelegramLongPollingBot {
 
     private String getRandomTagLine() {
         String content = getContent();
+        TagLine tagLine = getJSON(content);
 
-        return getJSON(content).tagLine;
+        return tagLine.getTagline();
     }
 
     private TagLine getJSON(String content) {
@@ -122,18 +123,18 @@ public class TagLinesChatBot extends TelegramLongPollingBot {
 
 class TagLine {
 
-    String tagLine;
+    String tagline;
 
     public TagLine() {
         System.out.println("Construtor da TagLine");
-        this.tagLine = "";
+        this.tagline = "";
     }
 
-    public void setTagLine(String tagLine) {
-        this.tagLine = tagLine;
+    public void setTagline(String tagline) {
+        this.tagline = tagline;
     }
 
-    public String getTagLine() {
-        return this.tagLine;
+    public String getTagline() {
+        return this.tagline;
     }
 }
